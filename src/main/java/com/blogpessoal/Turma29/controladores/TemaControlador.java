@@ -23,9 +23,10 @@ import com.blogpessoal.Turma29.repositorios.TemaRepositorio;
 @RestController
 @RequestMapping("/api/v1/tema")
 public class TemaControlador {
-	
+
 	private @Autowired TemaRepositorio repositorio;
 
+	// Um endPoint com a capacidade de trazer todos os temas.
 	@GetMapping("/todos")
 	public ResponseEntity<List<Tema>> pegarTodos() {
 		List<Tema> objetoLista = repositorio.findAll();
@@ -37,11 +38,13 @@ public class TemaControlador {
 		}
 	}
 
+	// Um endPoint com a função de gravar um novo tema no banco de dados.
 	@PostMapping("/salvar")
 	public ResponseEntity<Tema> salvar(@Valid @RequestBody Tema novoTema) {
 		return ResponseEntity.status(201).body(repositorio.save(novoTema));
 	}
 
+	// Um endPoint com a função de trazer um unico tema por id.
 	@GetMapping("/{id_tema}")
 	public ResponseEntity<Tema> buscarPorId(@PathVariable(value = "id_tema") Long idTema) {
 		Optional<Tema> objetoTema = repositorio.findById(idTema);
@@ -53,6 +56,7 @@ public class TemaControlador {
 		}
 	}
 
+	// Um endPoint com a função de trazer um unico tema por Descricao (@PathVariable).
 	@GetMapping("/{tema}")
 	public ResponseEntity<List<Tema>> buscarPorTemaI(@PathVariable(value = "tema") String tema) {
 		List<Tema> objetoLista = repositorio.findAllByTemaContainingIgnoreCase(tema);
@@ -63,7 +67,8 @@ public class TemaControlador {
 			return ResponseEntity.status(200).body(objetoLista);
 		}
 	}
-
+	
+	// Um endPoint com a função de trazer um unico tema por Descricao (@RequestParam).
 	@GetMapping("/pesquisa")
 	public ResponseEntity<List<Tema>> buscarPorTemaII(@RequestParam(defaultValue = "") String tema) {
 		List<Tema> objetoLista = repositorio.findAllByTemaContainingIgnoreCase(tema);
@@ -75,11 +80,13 @@ public class TemaControlador {
 		}
 	}
 
+	// Um endPoint com a função de atualizar dados de um tema.
 	@PutMapping("/atualizar")
 	public ResponseEntity<Tema> atualizar(@Valid @RequestBody Tema temaParaAtualizar) {
 		return ResponseEntity.status(201).body(repositorio.save(temaParaAtualizar));
 	}
 
+	// Um endPoint com a função de apagar um tema do banco de dados).
 	@DeleteMapping("/deletar/{id_tema}")
 	public void deletarTemaPorId(@PathVariable(value = "id_tema") Long idTema) {
 		repositorio.deleteById(idTema);

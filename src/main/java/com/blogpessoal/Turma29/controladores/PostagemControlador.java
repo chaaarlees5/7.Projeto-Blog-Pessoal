@@ -23,9 +23,10 @@ import com.blogpessoal.Turma29.repositorios.PostagemRepositorio;
 @RestController
 @RequestMapping("/api/v1/postagem")
 public class PostagemControlador {
-	
+
 	private @Autowired PostagemRepositorio repositorio;
 
+	// Um endPoint com a capacidade de trazer todas as postagens.
 	@GetMapping("/todas")
 	public ResponseEntity<List<Postagem>> pegarTodos() {
 		List<Postagem> objetoLista = repositorio.findAll();
@@ -37,11 +38,13 @@ public class PostagemControlador {
 		}
 	}
 
+	// Um endPoint com a função de gravar uma nova Postagem no banco de dados.
 	@PostMapping("/salvar")
 	public ResponseEntity<Postagem> salvar(@Valid @RequestBody Postagem novaPostagem) {
 		return ResponseEntity.status(201).body(repositorio.save(novaPostagem));
 	}
 
+	// Um endPoint com a capacidade de trazer uma única postagem por ID.
 	@GetMapping("/{id_postagem}")
 	public ResponseEntity<Postagem> buscarPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
 		Optional<Postagem> objetoPostagem = repositorio.findById(idPostagem);
@@ -53,6 +56,8 @@ public class PostagemControlador {
 		}
 	}
 
+	// Um endPoint com a capacidade de trazer uma única postagem por título
+	// (@PathVariable).
 	@GetMapping("/titulo/{titulo}")
 	public ResponseEntity<List<Postagem>> buscarPorTituloI(@PathVariable(value = "titulo") String titulo) {
 		List<Postagem> objetoLista = repositorio.findAllByTituloContainingIgnoreCase(titulo);
@@ -64,6 +69,8 @@ public class PostagemControlador {
 		}
 	}
 
+	// Um endPoint com a capacidade de trazer uma única postagem por título
+	// (@RequestParam).
 	@GetMapping("/pesquisa")
 	public ResponseEntity<List<Postagem>> buscarPorTituloII(@RequestParam(defaultValue = "") String titulo) {
 		List<Postagem> objetoLista = repositorio.findAllByTituloContainingIgnoreCase(titulo);
@@ -75,15 +82,16 @@ public class PostagemControlador {
 		}
 	}
 
+	// Um endPoint com a função de atualizar dados de uma Postagem.
 	@PutMapping("/atualizar")
 	public ResponseEntity<Postagem> atualizar(@Valid @RequestBody Postagem postagemParaAtualizar) {
 		return ResponseEntity.status(201).body(repositorio.save(postagemParaAtualizar));
 	}
 
+	// Um endPoint com a função de apagar uma Postagem do banco de dados.
 	@DeleteMapping("/deletar/{id_postagem}")
 	public void deletarPostagemPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
 		repositorio.deleteById(idPostagem);
 	}
-
 
 }
