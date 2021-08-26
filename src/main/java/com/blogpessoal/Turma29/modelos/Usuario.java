@@ -8,6 +8,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * Classe utilizada como Entidade no Banco de Dados para Usuário. A mesma possui
+ * atributos que serão colunas no banco com título: nome, email e senha.
+ * 
+ * @author Charlô
+ * @since 1.0
+ */
 @Entity
 public class Usuario {
 

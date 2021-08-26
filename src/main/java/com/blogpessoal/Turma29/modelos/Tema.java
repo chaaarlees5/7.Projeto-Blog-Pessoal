@@ -6,6 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Classe utilizada como Entidade no Banco de Dados para Tema. A mesma possui
+ * atributos que serão colunas no banco com título: tema.
+ * 
+ * @author Charlô
+ * @since 1.0
+ */
 @Entity
 public class Tema {
 
