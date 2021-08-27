@@ -45,7 +45,7 @@ public class TemaControlador {
 	}
 
 	// Um endPoint com a função de trazer um unico tema por id.
-	@GetMapping("/{id_tema}")
+	@GetMapping("/id/{id_tema}")
 	public ResponseEntity<Tema> buscarPorId(@PathVariable(value = "id_tema") Long idTema) {
 		Optional<Tema> objetoTema = repositorio.findById(idTema);
 

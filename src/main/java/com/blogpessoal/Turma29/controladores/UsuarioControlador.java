@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.Turma29.modelos.Usuario;
 import com.blogpessoal.Turma29.repositorios.UsuarioRepositorio;
+import com.blogpessoal.Turma29.servicos.UsuarioServicos;
 
 @RestController
 @RequestMapping("/api/v1/usuario")
@@ -26,7 +27,8 @@ public class UsuarioControlador {
 
 //Instancia 'repositorio' como objeto da classe UsuariaRepositorio
 	private @Autowired UsuarioRepositorio repositorio; // @Autowired é um injetor de dependência
-
+	private @Autowired UsuarioServicos servicos;
+	
 //Retorna erro 204 se não encontrar nada na lista e imprime a lista se ela tiver algo.	
 	@GetMapping("/todes")
 //Vai retornar 'ResponseEntity<List<Usuario>>', 'pegarTodes' é o nome do método
@@ -39,14 +41,25 @@ public class UsuarioControlador {
 			return ResponseEntity.status(200).body(objetoLista);
 		}
 	}
-
+/*
 	@PostMapping("/salvar")
 //'@RequestBody' vai receber dados do body e passá-los para a variável novoUsuario
 //'@Valid vai validar as obrigatoriedades dos atributos de Usuario (@NotBlank, @Email, @Size, etc)
 	public ResponseEntity<Usuario> salvar(@Valid @RequestBody Usuario novoUsuario) {
 		return ResponseEntity.status(201).body(repositorio.save(novoUsuario));
 	}
+*/
+	@PostMapping("/salvar")
+	public ResponseEntity<Object> salvar(@Valid @RequestBody Usuario novoUsuario) {
+		Optional<Object> objetoOptional = servicos.cadastrarUsuario(novoUsuario);
 
+		if (objetoOptional.isEmpty()) {
+			return ResponseEntity.status(400).build();
+		} else {
+			return ResponseEntity.status(201).body(objetoOptional.get());
+		}
+	}
+	
 	@GetMapping("/{id_usuario}")
 	// @PathVariable pega o Id passado pela rota (URL) e joga dentro de idUsuario
 	public ResponseEntity<Usuario> buscarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
@@ -89,7 +102,7 @@ public class UsuarioControlador {
 		return ResponseEntity.status(201).body(repositorio.save(usuarioParaAtualizar));
 	}
 	
-	@DeleteMapping("/deletar/{idUsuario}")
+	@DeleteMapping("/deletar/{id_usuario}")
 	public void deletarUsuarioPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
 		repositorio.deleteById(idUsuario);
 	}
