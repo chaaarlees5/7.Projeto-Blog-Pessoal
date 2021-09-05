@@ -24,6 +24,13 @@ public class Postagem {
 	private @NotBlank String titulo;
 	private @NotBlank String descricao;
 	
+	/*
+	 * VIDEO MARCELO
+	 * @Temporal(TemporalType.TIMESTAMP)
+	 * private Date data = new java.sql.Date(System.currentTimeMillis());
+	 */
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "criador_id")
 	@JsonIgnoreProperties({"minhasPostagens"})
@@ -32,7 +39,7 @@ public class Postagem {
 	@ManyToOne
 	@JoinColumn(name = "tema_id")
 	@JsonIgnoreProperties({"postagens"})
-	private Usuario temaRelacionado;
+	private Tema temaRelacionado;
 	
 	public Long getIdPostagem() {
 		return idPostagem;
@@ -66,11 +73,11 @@ public class Postagem {
 		this.criador = criador;
 	}
 
-	public Usuario getTemaRelacionado() {
+	public Tema getTemaRelacionado() {
 		return temaRelacionado;
 	}
 
-	public void setTemaRelacionado(Usuario temaRelacionado) {
+	public void setTemaRelacionado(Tema temaRelacionado) {
 		this.temaRelacionado = temaRelacionado;
 	}
 	

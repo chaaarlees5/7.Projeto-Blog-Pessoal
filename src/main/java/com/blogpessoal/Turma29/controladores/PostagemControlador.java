@@ -1,4 +1,4 @@
-package com.blogpessoal.Turma29.controladores;
+	package com.blogpessoal.Turma29.controladores;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,12 +38,6 @@ public class PostagemControlador {
 		}
 	}
 
-	// Um endPoint com a função de gravar uma nova Postagem no banco de dados.
-	@PostMapping("/salvar")
-	public ResponseEntity<Postagem> salvar(@Valid @RequestBody Postagem novaPostagem) {
-		return ResponseEntity.status(201).body(repositorio.save(novaPostagem));
-	}
-
 	// Um endPoint com a capacidade de trazer uma única postagem por ID.
 	@GetMapping("/{id_postagem}")
 	public ResponseEntity<Postagem> buscarPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
@@ -55,6 +49,15 @@ public class PostagemControlador {
 			return ResponseEntity.status(204).build();
 		}
 	}
+	
+	/*VIDEO MARCELO
+	 *@GetMapping("/{id_postagem}")
+	 public ResponseEntity<Postagem> buscarPorId(@PathVariable Long idPostagem) {
+	 	return repositorio.findById(id)
+	 	.map(resp -> ResponseEntity.ok(resp))
+	 	.orElse(ResponseEntity.notFound().build());
+	 }
+	 */
 
 	// Um endPoint com a capacidade de trazer uma única postagem por título
 	// (@PathVariable).
@@ -68,7 +71,13 @@ public class PostagemControlador {
 			return ResponseEntity.status(200).body(objetoLista);
 		}
 	}
-
+	
+/* VIDEO MARCELO
+ * @GetMapping("/titulo/{titulo}")
+	public ResponseEntity<List<Postagem>> buscarPorTituloI(@PathVariable String titulo) {
+		return ResponseEntity.ok(repositorio.findAllByTituloContainingIgnoreCase(titulo))
+	}
+ */
 	// Um endPoint com a capacidade de trazer uma única postagem por título
 	// (@RequestParam).
 	@GetMapping("/pesquisa")
@@ -81,12 +90,32 @@ public class PostagemControlador {
 			return ResponseEntity.status(200).body(objetoLista);
 		}
 	}
+	
+	// Um endPoint com a função de gravar uma nova Postagem no banco de dados.
+	@PostMapping("/salvar")
+	public ResponseEntity<Postagem> salvar(@Valid @RequestBody Postagem novaPostagem) {
+		return ResponseEntity.status(201).body(repositorio.save(novaPostagem));
+	}
 
+	/*	VIDEO MARCELO
+	 *  @PostMapping("/salvar")
+	 *  public ResponseEntity<Postagem> salvar(@Valid @RequestBody Postagem novaPostagem) {
+	   		return ResponseEntity.status(HttpStatus.CREATED).body(repositorio.save(novaPostagem));
+	   	}
+	 */
+	
 	// Um endPoint com a função de atualizar dados de uma Postagem.
 	@PutMapping("/atualizar")
 	public ResponseEntity<Postagem> atualizar(@Valid @RequestBody Postagem postagemParaAtualizar) {
 		return ResponseEntity.status(201).body(repositorio.save(postagemParaAtualizar));
 	}
+	
+	/*	VIDEO MARCELO
+	 *  @PutMapping("/atualizar")
+	 *  public ResponseEntity<Postagem> atualizar(@Valid @RequestBody Postagem atualizarPostagem) {
+	   		return ResponseEntity.status(HttpStatus.OK).body(repositorio.save(atualizarPostagem));
+	   	}
+	 */
 
 	// Um endPoint com a função de apagar uma Postagem do banco de dados.
 	@DeleteMapping("/deletar/{id_postagem}")

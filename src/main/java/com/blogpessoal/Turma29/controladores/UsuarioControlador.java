@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.Turma29.modelos.Usuario;
+import com.blogpessoal.Turma29.modelos.utilidades.UsuarioDTO;
 import com.blogpessoal.Turma29.repositorios.UsuarioRepositorio;
 import com.blogpessoal.Turma29.servicos.UsuarioServicos;
 
@@ -52,6 +53,17 @@ public class UsuarioControlador {
 	@PostMapping("/salvar")
 	public ResponseEntity<Object> salvar(@Valid @RequestBody Usuario novoUsuario) {
 		Optional<Object> objetoOptional = servicos.cadastrarUsuario(novoUsuario);
+
+		if (objetoOptional.isEmpty()) {
+			return ResponseEntity.status(400).build();
+		} else {
+			return ResponseEntity.status(201).body(objetoOptional.get());
+		}
+	}
+	
+	@PutMapping("/credenciais")
+	public ResponseEntity<Object> credenciais(@RequestBody @Valid UsuarioDTO usuarioParaAutenticar) {
+		Optional<?> objetoOptional = servicos.pegarCredenciais(usuarioParaAutenticar);
 
 		if (objetoOptional.isEmpty()) {
 			return ResponseEntity.status(400).build();

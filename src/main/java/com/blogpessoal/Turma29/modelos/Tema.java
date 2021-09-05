@@ -27,6 +27,13 @@ public class Tema {
 	@OneToMany(mappedBy = "temaRelacionado", cascade = CascadeType.REMOVE)
 	private List<Postagem> postagens = new ArrayList();
 	
+	/*
+	 * VIDEO MARCELO
+	 	//'CascadeType.ALL' pra que quando se deletar um tema, todas as postagens daquele tema sejam excluidas.
+	 * @OneToMany(mappedBy = "temaRelacionado", cascade = CascadeType.ALL)
+	   private List<Postagem> postagens;
+	 */
+	
 	public Long getIdTema() {
 		return idTema;
 	}
