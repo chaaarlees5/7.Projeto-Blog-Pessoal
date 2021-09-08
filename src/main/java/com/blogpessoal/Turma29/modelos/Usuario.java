@@ -35,7 +35,7 @@ public class Usuario {
 	//Cascade.Remove usado para que quando deletem uma postagem, não seja deletado o usuario da postagem
 	@OneToMany(mappedBy = "criador", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties({"criador"})
-	private List<Postagem> minhasPostagens = new ArrayList();
+	private List<Postagem> minhasPostagens = new ArrayList<>();
 
 	public Long getIdUsuario() {
 		return idUsuario;

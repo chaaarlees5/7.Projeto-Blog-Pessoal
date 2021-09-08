@@ -32,11 +32,10 @@ public class UsuarioServicos {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String senhaCriptografada = encoder.encode(novoUsuario.getSenha());
 			novoUsuario.setSenha(senhaCriptografada);
-			
 			return Optional.ofNullable(repositorio.save(novoUsuario));
 		});
 	}
-	
+
 	public Optional<?> pegarCredenciais(UsuarioDTO usuarioParaAutenticar) {
 		return repositorio.findByEmail(usuarioParaAutenticar.getEmail()).map(usuarioExistente -> {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

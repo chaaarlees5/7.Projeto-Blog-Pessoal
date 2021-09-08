@@ -26,13 +26,13 @@ import com.blogpessoal.Turma29.servicos.UsuarioServicos;
 @RequestMapping("/api/v1/usuario")
 public class UsuarioControlador {
 
-//Instancia 'repositorio' como objeto da classe UsuariaRepositorio
+//Instancia 'repositorio' como objeto da classe UsuarioRepositorio
 	private @Autowired UsuarioRepositorio repositorio; // @Autowired é um injetor de dependência
 	private @Autowired UsuarioServicos servicos;
 	
 //Retorna erro 204 se não encontrar nada na lista e imprime a lista se ela tiver algo.	
+//Vai retornar 'ResponseEntity<List<Usuario>>' | 'pegarTodes' é o nome do método
 	@GetMapping("/todes")
-//Vai retornar 'ResponseEntity<List<Usuario>>', 'pegarTodes' é o nome do método
 	public ResponseEntity<List<Usuario>> pegarTodes() {
 		List<Usuario> objetoLista = repositorio.findAll();
 
@@ -42,14 +42,9 @@ public class UsuarioControlador {
 			return ResponseEntity.status(200).body(objetoLista);
 		}
 	}
-/*
-	@PostMapping("/salvar")
+
 //'@RequestBody' vai receber dados do body e passá-los para a variável novoUsuario
 //'@Valid vai validar as obrigatoriedades dos atributos de Usuario (@NotBlank, @Email, @Size, etc)
-	public ResponseEntity<Usuario> salvar(@Valid @RequestBody Usuario novoUsuario) {
-		return ResponseEntity.status(201).body(repositorio.save(novoUsuario));
-	}
-*/
 	@PostMapping("/salvar")
 	public ResponseEntity<Object> salvar(@Valid @RequestBody Usuario novoUsuario) {
 		Optional<Object> objetoOptional = servicos.cadastrarUsuario(novoUsuario);
