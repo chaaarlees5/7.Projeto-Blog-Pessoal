@@ -43,10 +43,13 @@ public class UsuarioControlador {
 		}
 	}
 
-//'@RequestBody' vai receber dados do body e passá-los para a variável novoUsuario
-//'@Valid vai validar as obrigatoriedades dos atributos de Usuario (@NotBlank, @Email, @Size, etc)
+
+//Body(atributos) Classe Usuario: idUsuario | nome | email | senha.
 	@PostMapping("/salvar")
+//'@RequestBody' vai receber dados do body e passá-los para a variável novoUsuario.
+//'@Valid vai validar as obrigatoriedades dos atributos de Usuario (@NotBlank, @Email, @Size, etc).
 	public ResponseEntity<Object> salvar(@Valid @RequestBody Usuario novoUsuario) {
+//'objetoOptional' vai receber o que for feito no método 'cadastrarUsuario' da classe UsuarioServicos.
 		Optional<Object> objetoOptional = servicos.cadastrarUsuario(novoUsuario);
 
 		if (objetoOptional.isEmpty()) {
@@ -55,9 +58,10 @@ public class UsuarioControlador {
 			return ResponseEntity.status(201).body(objetoOptional.get());
 		}
 	}
-	
+//Body(atributos) Classe Usuario: email | senha
 	@PutMapping("/credenciais")
 	public ResponseEntity<Object> credenciais(@RequestBody @Valid UsuarioDTO usuarioParaAutenticar) {
+//'objetoOptional' vai receber o que for feito no método 'pegarCredenciais' da classe UsuarioServicos.
 		Optional<?> objetoOptional = servicos.pegarCredenciais(usuarioParaAutenticar);
 
 		if (objetoOptional.isEmpty()) {
@@ -68,7 +72,7 @@ public class UsuarioControlador {
 	}
 	
 	@GetMapping("/{id_usuario}")
-	// @PathVariable pega o Id passado pela rota (URL) e joga dentro de idUsuario
+// @PathVariable pega o Id passado pela rota (URL) e joga dentro de idUsuario
 	public ResponseEntity<Usuario> buscarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
 		Optional<Usuario> objetoUsuario = repositorio.findById(idUsuario);
 
@@ -103,8 +107,6 @@ public class UsuarioControlador {
 	}
 	
 	@PutMapping("/atualizar")
-	//'@RequestBody' vai receber dados do body e passá-los para a variável usuarioParaAtualizar
-	//'@Valid vai validar as obrigatoriedades dos atributos de Usuario (@NotBlank, @Email, @Size, etc)
 	public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuarioParaAtualizar) {
 		return ResponseEntity.status(201).body(repositorio.save(usuarioParaAtualizar));
 	}
