@@ -1,4 +1,4 @@
-package com.blogpessoal.Turma29.seguranca;
+	package com.blogpessoal.Turma29.seguranca;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/api/v1/usuario/salvar").permitAll()
 			.antMatchers(HttpMethod.PUT, "/api/v1/usuario/credenciais").permitAll()
-			.antMatchers(HttpMethod.GET, "/api/v1/usuario/todes").permitAll()
+			.antMatchers(HttpMethod.OPTIONS).permitAll()
 		.anyRequest().authenticated()
 		.and().httpBasic()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -37,5 +37,11 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(service);
+		
+		auth.inMemoryAuthentication()
+		.withUser("root")
+		.password(senhaEncoder().encode("root"))
+		.authorities("ROLE_USER");
+
 	}
 }
