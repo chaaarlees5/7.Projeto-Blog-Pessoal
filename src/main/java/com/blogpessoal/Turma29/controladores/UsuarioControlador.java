@@ -59,7 +59,7 @@ public class UsuarioControlador {
 		}
 	}
 //Body(atributos) Classe Usuario: email | senha
-	@PutMapping("/credenciais")
+	@PostMapping("/credenciais")
 	public ResponseEntity<Object> credenciais(@RequestBody @Valid UsuarioDTO usuarioParaAutenticar) {
 //'objetoOptional' vai receber o que for feito no método 'pegarCredenciais' da classe UsuarioServicos.
 		Optional<?> objetoOptional = servicos.pegarCredenciais(usuarioParaAutenticar);

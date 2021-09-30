@@ -56,7 +56,8 @@ public class UsuarioServicos {
 				usuarioParaAutenticar.setToken(autorizacaoHeader);
 				usuarioParaAutenticar.setId(usuarioExistente.getIdUsuario());
 				usuarioParaAutenticar.setNome(usuarioExistente.getNome());
-				usuarioParaAutenticar.setSenha(usuarioExistente.getSenha());
+				usuarioParaAutenticar.setFoto(usuarioExistente.getFoto());
+				usuarioParaAutenticar.setTipo(usuarioExistente.getTipo());
 				
 				return Optional.ofNullable(usuarioParaAutenticar); //Usuario Credenciado //email e senha ok
 				
