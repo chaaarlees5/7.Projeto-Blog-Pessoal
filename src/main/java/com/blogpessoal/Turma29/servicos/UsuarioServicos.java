@@ -32,15 +32,48 @@ public class UsuarioServicos {
 			return Optional.empty();
 		}).orElseGet(() -> {
 			BCryptPasswordEncoder codificar = new BCryptPasswordEncoder();
-//Encriptografa a senha recebida em novoUsuario
 			String senhaCriptografada = codificar.encode(novoUsuario.getSenha());
-//Substitui a senha recebida pela senha encriptografada
 			novoUsuario.setSenha(senhaCriptografada);
-//Retorna para o 'objetoOptional' de 'UsuarioControlador' o 'novoUsuario' com a senha encriptografada 
 			return Optional.ofNullable(repositorio.save(novoUsuario));
 		});
 	}
+/*
+	public Usuario cadastrarUsuario(Usuario usuario) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+		String senhaEncoder = encoder.encode(usuario.getSenha());
+		usuario.setSenha(senhaEncoder);
+
+		return repositorio.save(usuario);
+	}
+*/
+/*
+	public Optional<UsuarioDTO> pegarCredenciais(Optional<UsuarioDTO> user) {
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		Optional<Usuario> usuario = repositorio.findByEmail(user.get().getEmail());
+
+		if (usuario.isPresent()) {
+			if (encoder.matches(user.get().getSenha(), usuario.get().getSenha())) {
+
+				String auth = user.get().getEmail() + ":" + user.get().getSenha();
+				byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+				String authHeader = "Basic " + new String(encodedAuth);
+
+				user.get().setToken(authHeader);		
+				user.get().setId(usuario.get().getIdUsuario());
+				user.get().setNome(usuario.get().getNome());
+				user.get().setFoto(usuario.get().getFoto());
+				user.get().setTipo(usuario.get().getTipo());
+				
+				return user;
+
+			}
+		}
+		return null;
+	}
+}
+*/
 //'usuarioParaAutenticar' recebe email | senha
 	public Optional<?> pegarCredenciais(UsuarioDTO usuarioParaAutenticar) {
 //Analisa se o email do 'usuarioParaAutenticar' existe dentro da tabela (UsuarioRepositorio)

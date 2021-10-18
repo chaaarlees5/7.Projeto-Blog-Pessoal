@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.Turma29.modelos.Postagem;
 import com.blogpessoal.Turma29.repositorios.PostagemRepositorio;
+import com.blogpessoal.Turma29.servicos.PostagemServicos;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/v1/postagem")
+@RequestMapping("/postagem")
 public class PostagemControlador {
 
+	private @Autowired PostagemServicos servico;
 	private @Autowired PostagemRepositorio repositorio;
 
 	// Um endPoint com a capacidade de trazer todas as postagens.
@@ -40,6 +44,12 @@ public class PostagemControlador {
 
 	// Um endPoint com a capacidade de trazer uma única postagem por ID.
 	@GetMapping("/{id_postagem}")
+	 public ResponseEntity<Postagem> buscarPorId(@PathVariable Long idPostagem) {
+	 	return repositorio.findById(idPostagem).map(resp -> ResponseEntity.ok(resp))
+	 			.orElse(ResponseEntity.notFound().build());
+	 }
+	/*
+	@GetMapping("/{id_postagem}")
 	public ResponseEntity<Postagem> buscarPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
 		Optional<Postagem> objetoPostagem = repositorio.findById(idPostagem);
 
@@ -49,16 +59,7 @@ public class PostagemControlador {
 			return ResponseEntity.status(204).build();
 		}
 	}
-	
-	/*VIDEO MARCELO
-	 *@GetMapping("/{id_postagem}")
-	 public ResponseEntity<Postagem> buscarPorId(@PathVariable Long idPostagem) {
-	 	return repositorio.findById(id)
-	 	.map(resp -> ResponseEntity.ok(resp))
-	 	.orElse(ResponseEntity.notFound().build());
-	 }
-	 */
-
+	*/
 	// Um endPoint com a capacidade de trazer uma única postagem por título
 	// (@PathVariable).
 	@GetMapping("/titulo/{titulo}")
@@ -106,21 +107,28 @@ public class PostagemControlador {
 	
 	// Um endPoint com a função de atualizar dados de uma Postagem.
 	@PutMapping("/atualizar")
-	public ResponseEntity<Postagem> atualizar(@Valid @RequestBody Postagem postagemParaAtualizar) {
-		return ResponseEntity.status(201).body(repositorio.save(postagemParaAtualizar));
+	public ResponseEntity<Object> atualizarProduto(@Valid @RequestBody Postagem postagemAtualizada) {
+		Optional<?> postParaAtualizar = servico.atualizarPostagem(postagemAtualizada);
+		
+		if(postParaAtualizar.isPresent()) {
+			return ResponseEntity.status(201).body(postParaAtualizar.get());
+		} else {
+			return ResponseEntity.status(204).build();
+		}
+		
 	}
-	
-	/*	VIDEO MARCELO
-	 *  @PutMapping("/atualizar")
-	 *  public ResponseEntity<Postagem> atualizar(@Valid @RequestBody Postagem atualizarPostagem) {
-	   		return ResponseEntity.status(HttpStatus.OK).body(repositorio.save(atualizarPostagem));
-	   	}
-	 */
 
 	// Um endPoint com a função de apagar uma Postagem do banco de dados.
 	@DeleteMapping("/deletar/{id_postagem}")
-	public void deletarPostagemPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
-		repositorio.deleteById(idPostagem);
+	public ResponseEntity<Object> deletarPostagemPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
+		Optional<Postagem> postagemId = repositorio.findById(idPostagem);
+		
+		if (postagemId.isEmpty()) {
+			return ResponseEntity.status(204).build();
+		} else {
+			repositorio.deleteById(idPostagem);
+			return ResponseEntity.status(200).build();
+		}
 	}
-
+	
 }

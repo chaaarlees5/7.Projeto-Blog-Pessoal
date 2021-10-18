@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.Turma29.modelos.Tema;
 import com.blogpessoal.Turma29.repositorios.TemaRepositorio;
+import com.blogpessoal.Turma29.servicos.TemaServicos;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/tema")
+@RequestMapping("/tema")
 public class TemaControlador {
 
+	private @Autowired TemaServicos servico;
 	private @Autowired TemaRepositorio repositorio;
 
 	// Um endPoint com a capacidade de trazer todos os temas.
@@ -47,6 +51,14 @@ public class TemaControlador {
 	// Um endPoint com a função de trazer um unico tema por id.
 	@GetMapping("/id/{id_tema}")
 	public ResponseEntity<Tema> buscarPorId(@PathVariable(value = "id_tema") Long idTema) {
+
+		return repositorio.findById(idTema).map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	/*
+	@GetMapping("/id/{id_tema}")
+	public ResponseEntity<Tema> buscarPorId(@PathVariable(value = "id_tema") Long idTema) {
 		Optional<Tema> objetoTema = repositorio.findById(idTema);
 
 		if (objetoTema.isPresent()) {
@@ -55,6 +67,7 @@ public class TemaControlador {
 			return ResponseEntity.status(204).build();
 		}
 	}
+	*/
 
 	// Um endPoint com a função de trazer um unico tema por Descricao (@PathVariable).
 	@GetMapping("/{tema}")
@@ -82,13 +95,27 @@ public class TemaControlador {
 
 	// Um endPoint com a função de atualizar dados de um tema.
 	@PutMapping("/atualizar")
-	public ResponseEntity<Tema> atualizar(@Valid @RequestBody Tema temaParaAtualizar) {
-		return ResponseEntity.status(201).body(repositorio.save(temaParaAtualizar));
+	public ResponseEntity<Tema> atualizar(@Valid @RequestBody Tema temaAtualizado) {
+		Optional<Tema> temaParaAtualizar = servico.atualizarTema(temaAtualizado);
+		
+		if (temaParaAtualizar.isPresent()) {
+			return ResponseEntity.status(201).body(temaParaAtualizar.get());
+		} else {
+			return ResponseEntity.status(204).build();
+		}
 	}
-
+	
 	// Um endPoint com a função de apagar um tema do banco de dados).
 	@DeleteMapping("/deletar/{id_tema}")
-	public void deletarTemaPorId(@PathVariable(value = "id_tema") Long idTema) {
-		repositorio.deleteById(idTema);
+	public ResponseEntity<Object> deletarTemaPorId(@PathVariable(value = "id_tema") Long idTema) {
+		Optional<Tema> temaId = repositorio.findById(idTema);
+
+		if(temaId.isEmpty()) {
+			return ResponseEntity.status(204).build();
+		} else {
+			repositorio.deleteById(idTema);
+			return ResponseEntity.status(200).build();
+		}
 	}
+
 }
